@@ -8,6 +8,7 @@ import random
 
 # IMAGE PROCESSING
 
+# note: uncomment the "plt.show" to see the result of the code step by step
 # reading the image
 img = cv2.imread("testMain.jpg")
 plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
@@ -50,6 +51,30 @@ mask = np.zeros(gray.shape, np.uint8)
 new_image = cv2.drawContours(mask,[location],0,255, -1)
 new_image = cv2.bitwise_and(img, img, mask=mask)
 plt.imshow(cv2.cvtColor(new_image, cv2.COLOR_BGR2RGB))
+
+# CROPPING OF THE NUMBER PLATE
+# 4-corner coordinates
+(x,y) = np.where(mask == 255)
+# top left corner
+(x1,y1) = (np.min(x), np.min(y))
+# bottom right corner
+(x2,y2) = (np.max(x), np.max(y))
+cropped_image = gray[x1:x2 + 1, y1:y2 + 1]
+
+plt.imshow(cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB))
 plt.show()
 
+# EXTRACT TEXT FROM IMAGES WITH OCR
+reader = easyocr.Reader(['en'])
+result = reader.readtext(cropped_image)
+# print(result)
+
+# DISPLAY FINAL OUTPUT
+text = result[0][-2]
+font = cv2.FONT_HERSHEY_SIMPLEX
+res = cv2.putText(img, text = text, org = (approx[0][0][0], approx[1][0][1] + 60), fontFace=font, fontScale=1, color=(0,255,0), thickness=2, lineType=cv2.LINE_AA)
+# creating a rectangle around the text
+res = cv2.rectangle(img, tuple(approx[0][0]), tuple(approx[2][0]), (0,255,0), 3)
+plt.imshow(cv2.cvtColor(res, cv2.COLOR_BGR2RGB))
+# plt.show()
 
