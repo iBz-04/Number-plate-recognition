@@ -2,6 +2,7 @@
 
 - This project demonstrates how to detect and recognize license plates from an image using Python Image Processing.
 - It is a practical implementation of computer vision and OCR techniques, suitable for applications such as vehicle monitoring systems or parking management.
+- it only works for images
 
 ## IMAGES 
 
